@@ -14,40 +14,44 @@ class _AppLayoutState extends State<AppLayout> {
   Widget build(BuildContext context) {
     final cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          BlocBuilder(
-            bloc: cartBloc,
-            builder: (context, state) {
-              if (state is CartItemsLoadedState) {
-                final staye = state;
-                final List<ProductItem> productItemsList =
-                    staye.productItemsList;
-                final int length = productItemsList.length;
-               /*  cartBloc.dispatch(LoadProductItems()); */
-                return cartICon(context, length);
-              } else if (state is CartEmptyState) {
-                return cartICon(context, 0);
-              }
-            },
-          ),
-        ],
-        leading: IconButton(
-          color: Colors.black,
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/cart');
+      appBar: myAppBar(cartBloc, context),
+      body: CategoryPage(),
+    );
+  }
+
+  AppBar mAppBar(ShoppingcartBloc cartBloc, BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      elevation: 0,
+      backgroundColor: Colors.white,
+      actions: <Widget>[
+        BlocBuilder(
+          bloc: cartBloc,
+          builder: (context, state) {
+            if (state is CartItemsLoadedState) {
+              final stateAsCartItemsLoadedState = state;
+              final List<ProductItem> productItemsList =
+                  stateAsCartItemsLoadedState.productItemsList;
+              final int length = productItemsList.length;
+              /*  cartBloc.dispatch(LoadProductItems()); */
+              return cartICon(context, length);
+            } else if (state is CartEmptyState) {
+              return cartICon(context, 0);
+            }
           },
         ),
-        title: Text(
-          "T-shirt",
-          style: TextStyle(color: Colors.black),
-        ),
+      ],
+      leading: IconButton(
+        color: Colors.black,
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/cart');
+        },
       ),
-      body: CategoryPage(),
+      title: Text(
+        "T-shirt",
+        style: TextStyle(color: Colors.black),
+      ),
     );
   }
 
