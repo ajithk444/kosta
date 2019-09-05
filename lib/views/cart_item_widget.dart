@@ -57,7 +57,7 @@ class CartItemWidget extends StatelessWidget {
                   Text(
                     productItem.name,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

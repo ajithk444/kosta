@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kosta/models/productItem.dart';
 import 'package:kosta/services/blocs/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/views/product_widget.dart';
 
 import 'cart_item_widget.dart';
 
@@ -12,27 +13,48 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
 
-    return Container(
-      child: ListView(
-        children: <Widget>[
-          header(),
-          sectionOptions(),
-          for (var productItem in productItemsList)
-            Builder(
-              builder: (context) {
-                return CartItemWidget(
-                  productItem: productItem,
-                );
-              },
-            )
-        ],
-      ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          expandedHeight: 370,
+          backgroundColor: Colors.white,
+          floating: true,
+          elevation: 0,
+          flexibleSpace: FlexibleSpaceBar(
+              //centerTitle: true,
+
+              background: Column(
+            children: <Widget>[
+              header(),
+              sectionOptions(),
+            ],
+          )),
+        ),
+        SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 10,
+            childAspectRatio: .59,
+          ),
+          delegate: SliverChildListDelegate(<Widget>[
+            for (var productItem in productItemsList)
+              Builder(
+                builder: (context) {
+                  return ProductWidget(
+                    productItem: productItem,
+                  );
+                },
+              ),
+          ]),
+        )
+      ],
     );
   }
 
   Container sectionOptions() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       //  height: 60,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

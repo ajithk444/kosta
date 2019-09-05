@@ -52,7 +52,6 @@ class ShoppingcartBloc extends Bloc<ShoppingcartEvent, ShoppingcartState> {
       productItemsList = _cartRepository.productItemsList;
       _cartRepository.addToList(item);
       yield CartItemsLoadedState(productItemsList);
-
       print("the item is $item");
       print("the item is ${_cartRepository.productItemsList}");
     } catch (e) {
