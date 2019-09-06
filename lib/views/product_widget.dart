@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kosta/models/product.dart';
 import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 
+import '../utils.dart';
+
 class ProductWidget extends StatelessWidget {
   final Product productItem;
 
@@ -44,7 +46,8 @@ class ProductWidget extends StatelessWidget {
                   color: Colors.red.withOpacity(0.2),
                   child: FittedBox(
                     fit: BoxFit.cover,
-                    child: Image.network(productItem.imgUrl),
+                    child: Image.network(productItem.imgUrl) ??
+                        Center(child: Text("KOSTA")),
                   ),
                 ),
                 SizedBox(
@@ -81,7 +84,7 @@ class ProductWidget extends StatelessWidget {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: productItem.selectedColor,
+                            color: HexColor(productItem.selectedColor),
                             // shape: BoxShape.circle,
                           ),
                         )
@@ -108,7 +111,7 @@ class ProductWidget extends StatelessWidget {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: productItem.selectedColor,
+                color: HexColor(productItem.selectedColor),
                 shape: BoxShape.circle,
               ),
             ),

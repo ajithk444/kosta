@@ -6,7 +6,7 @@ import 'package:kosta/models/product.dart';
 import 'package:kosta/services/repository/cartRepository.dart';
 import './shoppingcart_bloc_barrel.dart';
 
-class ShoppingcartBloc extends Bloc<ShoppingcartEvent, ShoppingcartState> {
+class ShoppingcartBloc extends HydratedBloc<ShoppingcartEvent, ShoppingcartState> {
   CartRepository _cartRepository;
 
   ShoppingcartBloc({CartRepository cartRepository})
@@ -15,10 +15,10 @@ class ShoppingcartBloc extends Bloc<ShoppingcartEvent, ShoppingcartState> {
 
   @override
   ShoppingcartState get initialState {
-    return CartEmptyState();
+     
     // Super class (HydratedBloc) will try to get the lastly stored state.
     // If there isn't a stored state (null), return a default WeatherInitial.
-    /* return super.initialState ?? CartEmptyState(); */
+    return super.initialState ?? CartEmptyState();
   }
 
   @override
@@ -93,7 +93,7 @@ class ShoppingcartBloc extends Bloc<ShoppingcartEvent, ShoppingcartState> {
     }
   }
 
-/*   @override
+  @override
   ShoppingcartState fromJson(Map<String, dynamic> json) {
     try {
       final product = Cart.fromJson(json);
@@ -110,5 +110,5 @@ class ShoppingcartBloc extends Bloc<ShoppingcartEvent, ShoppingcartState> {
     } else {
       return null;
     }
-  } */
+  }
 }

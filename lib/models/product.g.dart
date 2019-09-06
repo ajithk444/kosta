@@ -15,7 +15,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     imgUrl: json['imgUrl'] as String,
     isNew: json['isNew'] as bool,
     price: (json['price'] as num)?.toDouble(),
-    selectedColor: json['selectedColor'],
+    selectedColor: json['selectedColor'] as String,
     quantity: json['quantity'] as int,
   );
 }

@@ -16,5 +16,5 @@ Cart _$CartFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{
-      'products': instance.products,
+      'products': instance.products?.map((e) => e?.toJson())?.toList(),
     };

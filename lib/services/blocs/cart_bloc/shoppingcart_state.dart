@@ -16,8 +16,8 @@ class InitialShoppingcartState extends ShoppingcartState {
 class CartItemsLoadedState extends ShoppingcartState {
   final Cart cart;
 
-  CartItemsLoadedState([this.cart = const Cart(products: [])])
-      : super([cart]);
+  //List<Product> products = cart.products;
+  CartItemsLoadedState(this.cart) : super([cart]);
   @override
   String toString() => 'CartItemsLoaded Loaded';
 }
@@ -30,8 +30,7 @@ class CartEmptyState extends ShoppingcartState {
 class ItemAddedState extends ShoppingcartState {
   final Cart cart;
 
-  ItemAddedState([this.cart = const Cart(products: [])])
-      : super([cart]);
+  ItemAddedState([this.cart = const Cart(products: [])]) : super([cart]);
   @override
   String toString() => 'Item Added ';
 }

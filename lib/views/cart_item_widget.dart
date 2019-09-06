@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kosta/models/product.dart';
 import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/utils.dart';
 
 import '../theme.dart';
 
@@ -149,7 +150,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: widget.product.selectedColor,
+                    color: HexColor(widget.product.selectedColor),
                   ),
                 ),
               ],
