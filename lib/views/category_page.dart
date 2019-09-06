@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kosta/models/productItem.dart';
-import 'package:kosta/services/blocs/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/models/cart.dart';
+import 'package:kosta/models/product.dart';
+ 
+import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 import 'package:kosta/views/product_widget.dart';
 
-import 'cart_item_widget.dart';
+ 
 
 class CategoryPage extends StatelessWidget {
   const CategoryPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
+/*     final cartBloc = BlocProvider.of<ShoppingcartBloc>(context); */
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -38,11 +40,11 @@ class CategoryPage extends StatelessWidget {
             childAspectRatio: .59,
           ),
           delegate: SliverChildListDelegate(<Widget>[
-            for (var productItem in productItemsList)
+            for (var product  in myProducts)
               Builder(
                 builder: (context) {
                   return ProductWidget(
-                    productItem: productItem,
+                    productItem: product ,
                   );
                 },
               ),

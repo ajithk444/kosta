@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kosta/models/productItem.dart';
-import 'package:kosta/services/blocs/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/models/cart.dart';
+import 'package:kosta/models/product.dart';
+import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 import 'package:kosta/views/category_page.dart';
 
 class AppLayout extends StatefulWidget {
@@ -22,12 +23,20 @@ class _AppLayoutState extends State<AppLayout> {
           BlocBuilder(
             bloc: cartBloc,
             builder: (context, state) {
-              if (state is CartItemsLoadedState) {
-                final staye = state;
-                final List<ProductItem> productItemsList =
-                    staye.productItemsList;
-                final int length = productItemsList.length;
-               /*  cartBloc.dispatch(LoadProductItems()); */
+              if (state is ItemAddedState) {
+                final List<Product> products = state.cart.products;
+                int length = 0;
+                for (int i = 0; i < products.length; i++) {
+                  length = length + products[i].quantity;
+                }
+                return cartICon(context, length);
+              } else if (state is CartItemsLoadedState) {
+                final List<Product> products = state.cart.products;
+                int length = 0;
+                for (int i = 0; i < products.length; i++) {
+                  length = length + products[i].quantity;
+                }
+                /*  cartBloc.dispatch(LoadProducts()); */
                 return cartICon(context, length);
               } else if (state is CartEmptyState) {
                 return cartICon(context, 0);
@@ -55,7 +64,9 @@ class _AppLayoutState extends State<AppLayout> {
     return MaterialButton(
       height: 1,
       minWidth: 50,
-      child: Text(length.toString()),
+      child: Text(
+        length.toString(),
+      ),
       color: Colors.lime,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),

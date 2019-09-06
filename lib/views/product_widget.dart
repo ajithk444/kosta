@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kosta/models/productItem.dart';
-import 'package:kosta/services/blocs/shoppingcart_bloc.dart';
-import 'package:kosta/services/blocs/shoppingcart_event.dart';
+import 'package:kosta/models/product.dart';
+import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 
 class ProductWidget extends StatelessWidget {
-  final ProductItem productItem;
+  final Product productItem;
 
   const ProductWidget({Key key, @required this.productItem}) : super(key: key);
 
@@ -13,13 +12,9 @@ class ProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
 
-    addToCart(ProductItem productItem) {
-      _cartBloc.dispatch(AddProductItem(productItem: productItem));
-      /* _cartBloc.dispatch(LoadProductItems()); */
-    }
-
-    removeFromList(ProductItem productItem) {
-      _cartBloc.dispatch(RemoveProductItem(productItem: productItem));
+    addToCart(Product productItem) {
+      _cartBloc.dispatch(AddProductToCart(product: productItem));
+      /* _cartBloc.dispatch(LoadProducts()); */
     }
 
     return Padding(
@@ -29,8 +24,9 @@ class ProductWidget extends StatelessWidget {
         child: InkWell(
           onTap: () {
             addToCart(productItem);
+            Scaffold.of(context).removeCurrentSnackBar();
             final snackBar = SnackBar(
-              content: Text('${productItem.name} ajouté dans votre panier!'),
+              content: Text('${productItem.name} ajouté à votre panier!'),
               duration: Duration(milliseconds: 2000),
             );
             Scaffold.of(context).showSnackBar(snackBar);
@@ -77,7 +73,7 @@ class ProductWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "${productItem.price} FCFA ",
+                          "${productItem.price.toStringAsFixed(0)} FCFA",
                           style: TextStyle(
                               fontWeight: FontWeight.w400, fontSize: 10),
                         ),

@@ -1,9 +1,10 @@
-import 'package:kosta/models/productItem.dart';
+import 'package:kosta/models/cart.dart';
+import 'package:kosta/models/product.dart';
 
 class CartRepository {
-  List<ProductItem> productItemsList = [];
-
-  addToList(ProductItem item) {
+  List<Product> productItemsList = [];
+  Cart productItems = Cart(products: []);
+  addToList(Product item) {
     bool isPresent = false;
 
     if (productItemsList.length > 0) {
@@ -27,7 +28,7 @@ class CartRepository {
     return item;
   }
 
-  removeFromList(ProductItem item) {
+  removeFromList(Product item) {
     if (item.quantity > 1) {
       decreaseItemQuantity(item);
     } else {
@@ -36,6 +37,6 @@ class CartRepository {
     return productItemsList;
   }
 
-  void increaseItemQuantity(ProductItem item) => item.incrementQuantity();
-  void decreaseItemQuantity(ProductItem item) => item.decrementQuantity();
+  void increaseItemQuantity(Product item) => item.incrementQuantity();
+  void decreaseItemQuantity(Product item) => item.decrementQuantity();
 }

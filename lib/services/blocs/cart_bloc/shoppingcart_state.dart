@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:kosta/models/productItem.dart';
+import 'package:kosta/models/cart.dart';
+import 'package:kosta/models/product.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -13,18 +14,26 @@ class InitialShoppingcartState extends ShoppingcartState {
 }
 
 class CartItemsLoadedState extends ShoppingcartState {
-  final List<ProductItem> productItemsList;
+  final Cart cart;
 
-  CartItemsLoadedState([this.productItemsList = const []])
-      : super([productItemsList]);
+  CartItemsLoadedState([this.cart = const Cart(products: [])])
+      : super([cart]);
   @override
   String toString() => 'CartItemsLoaded Loaded';
 }
 
-
 class CartEmptyState extends ShoppingcartState {
   @override
   String toString() => 'Cart Empty';
+}
+
+class ItemAddedState extends ShoppingcartState {
+  final Cart cart;
+
+  ItemAddedState([this.cart = const Cart(products: [])])
+      : super([cart]);
+  @override
+  String toString() => 'Item Added ';
 }
 
 class CartErrorState extends ShoppingcartState {

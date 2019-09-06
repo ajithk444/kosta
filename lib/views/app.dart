@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kosta/services/blocs/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 import 'package:kosta/services/repository/cartRepository.dart';
 
 import 'app_Layout.dart';
@@ -27,13 +27,6 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ShoppingcartBloc>(
-          builder: (context) => _cartBloc,
-        ),
-      ],
-      child: AppLayout(),
-    );
+    return AppLayout();
   }
 }

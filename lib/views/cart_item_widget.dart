@@ -1,80 +1,128 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kosta/models/productItem.dart';
-import 'package:kosta/services/blocs/shoppingcart_bloc.dart';
-import 'package:kosta/services/blocs/shoppingcart_event.dart';
+import 'package:kosta/models/product.dart';
+import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 
-class CartItemWidget extends StatelessWidget {
-  final ProductItem productItem;
+import '../theme.dart';
 
-  const CartItemWidget({Key key, @required this.productItem}) : super(key: key);
+class CartItemWidget extends StatefulWidget {
+  final Product product;
+  final bool edit;
 
+  CartItemWidget({Key key, @required this.product, this.edit = false})
+      : super(key: key);
+
+  @override
+  _CartItemWidgetState createState() => _CartItemWidgetState();
+}
+
+class _CartItemWidgetState extends State<CartItemWidget> {
   @override
   Widget build(BuildContext context) {
     final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
 
-    addToCart(ProductItem productItem) {
-      _cartBloc.dispatch(AddProductItem(productItem: productItem));
-      /* _cartBloc.dispatch(LoadProductItems()); */
+    addToCart(Product product) {
+      _cartBloc.dispatch(AddProductToCart(product: product));
+      /* _cartBloc.dispatch(LoadProducts()); */
     }
 
-    removeFromList(ProductItem productItem) {
-      _cartBloc.dispatch(RemoveProductItem(productItem: productItem));
+    removeFromCart(Product product) {
+      _cartBloc.dispatch(RemoveProductFromCart(product: product));
     }
 
-    return GestureDetector(
-      onTap: () {
-        addToCart(productItem);
-        final snackBar = SnackBar(
-          content: Text('${productItem.name} added to Cart'),
-          duration: Duration(milliseconds: 550),
-        );
-        Scaffold.of(context).showSnackBar(snackBar);
-      },
-      child: Container(
-        padding: EdgeInsets.only(left: 10, right: 20, bottom: 15),
-        height: 140,
-        //color: Colors.red,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              height: 160,
-              width: 120,
-              color: Colors.red.withOpacity(0.2),
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Image.network(productItem.imgUrl),
-              ),
-            ),
-            SizedBox(
-              width: 25,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      children: <Widget>[
+        widget.edit ? editOptionWidget(removeFromCart) : Container(),
+        Expanded(
+          flex: 8,
+          child: Material(
+            color: Colors.white,
+            child: InkWell(
+              onTap: () {
+                setState(() {
+//widget.edit = widget.edit ? false :true;
+                });
+              },
+              child: Row(
                 children: <Widget>[
-                  Text(
-                    productItem.name,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    flex: 8,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, right: 20, bottom: 15),
+                      height: 200,
+                      //color: Colors.red,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: 200,
+                            width: 120,
+                            color: Colors.red.withOpacity(0.2),
+                            child: FittedBox(
+                              fit: BoxFit.cover,
+                              child: Image.network(widget.product.imgUrl),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 25,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                Text(
+                                  widget.product.name,
+                                  style: kProductName,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  widget.product.price.toStringAsFixed(0),
+                                  style: kProductPrice,
+                                ),
+                                footer()
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "FCFA 5000",
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16),
-                  ),
-                  footer()
                 ],
               ),
-            )
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Expanded editOptionWidget(removeFromCart(Product product)) {
+    return Expanded(
+      flex: 1,
+      // fit: FlexFit.loose,
+      child: Container(
+        height: 200,
+        // color: Colors.red,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            iconBtn(
+              Colors.red,
+              Icons.delete,
+              widget.product,
+              () {
+                removeFromCart(widget.product);
+              },
+            ),
+            iconBtn(
+                Colors.grey, Icons.favorite_border, widget.product, null)
           ],
         ),
       ),
@@ -88,18 +136,25 @@ class CartItemWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: productItem.selectedColor,
-                shape: BoxShape.circle,
-              ),
+            //color
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  "M",
+                  textAlign: TextAlign.justify,
+                ),
+                SizedBox(height: 45),
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: widget.product.selectedColor,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              width: 15,
-            ),
-            Text("M"),
+
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -110,7 +165,7 @@ class CartItemWidget extends StatelessWidget {
                         style: TextStyle(color: Colors.grey),
                         children: [
                           TextSpan(
-                            text: productItem.quantity.toString(),
+                            text: widget.product.quantity.toString(),
                             style: TextStyle(color: Colors.black),
                           ),
                         ]),
@@ -121,6 +176,15 @@ class CartItemWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  IconButton iconBtn(
+      Color color, IconData icon, Product item, VoidCallback onPressed) {
+    return IconButton(
+      color: color,
+      icon: Icon(icon),
+      onPressed: onPressed,
     );
   }
 }

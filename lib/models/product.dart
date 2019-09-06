@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class ProductItem {
+part 'product.g.dart';
+
+@JsonSerializable()
+class Product {
   int id;
   String name;
   String description;
@@ -11,7 +16,7 @@ class ProductItem {
   Color selectedColor;
   int quantity;
 
-  ProductItem({
+  Product({
     @required this.id,
     @required this.name,
     @required this.description,
@@ -30,12 +35,23 @@ class ProductItem {
   decrementQuantity() {
     this.quantity = this.quantity - 1;
   }
+
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
 
-List<ProductItem> productItemsList = [
-  ProductItem(
+class ProductList {
+  final List<Product> products;
+
+  ProductList({@required this.products});
+}
+
+ProductList productsList = ProductList(products: [
+  Product(
     id: 1,
     name: "Colored utility vest",
+    price: 11.99,
     description:
         "Basic long sleeve shirt with front pockets, a Kent collar and button-up front. Available in a range of colors.",
     brand: "Las Vegas brand",
@@ -44,7 +60,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9771/502/800/9771502800_2_1_8.jpg?t=1565625488626&imwidth=900",
   ),
-  ProductItem(
+  Product(
     id: 2,
     name: "Black utility vest with pockets",
     description:
@@ -55,7 +71,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9771/500/800/9771500800_2_2_8.jpg?t=1564403302296&imwidth=900",
   ),
-  ProductItem(
+  Product(
     id: 3,
     name: "Shirt with front pockets",
     description:
@@ -67,7 +83,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9474/526/250/9474526250_2_1_8.jpg?t=1565619984992&imwidth=900",
   ),
-  ProductItem(
+  Product(
     id: 4,
     name: "Ripstop cargo pants",
     description:
@@ -78,7 +94,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9671/501/800/9671501800_2_1_8.jpg?t=1565621313001&imwidth=900",
   ),
-  ProductItem(
+  Product(
     id: 5,
     name: "White “Allowed” print T-shirt",
     description:
@@ -90,7 +106,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9231/512/250/9231512250_2_2_8.jpg?t=1564402497249&imwidth=900",
   ),
-  ProductItem(
+  Product(
     id: 7,
     name: "Oversize short raglan sleeve T-shirt",
     description:
@@ -101,7 +117,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9242/597/805/9242597805_2_1_8.jpg?t=1565619787224&imwidth=900",
   ),
-  ProductItem(
+  Product(
     id: 8,
     name: "Striped T-shirt with contrasting trim",
     description:
@@ -112,7 +128,7 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9230/574/420/9230574420_2_1_8.jpg?t=1561643061179&imwidth=900",
   ),
-  ProductItem(
+  Product(
       id: 9,
       name: "Black sneakers with coordinates detail",
       description:
@@ -123,7 +139,7 @@ List<ProductItem> productItemsList = [
       isNew: true,
       imgUrl:
           "https://static.pullandbear.net/2/photos//2019/I/1/2/p/7234/012/040/7234012040_2_1_8.jpg?t=1566565634278&imwidth=900"),
-  ProductItem(
+  Product(
       id: 10,
       name: "Oversize short raglan sleeve T-shirt",
       description:
@@ -133,7 +149,7 @@ List<ProductItem> productItemsList = [
       selectedColor: Colors.blueAccent,
       imgUrl:
           "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9242/597/800/9242597800_2_4_8.jpg?t=1565619675952&imwidth=900"),
-  ProductItem(
+  Product(
     id: 11,
     name: "End of Story print T-shirt",
     description:
@@ -145,4 +161,4 @@ List<ProductItem> productItemsList = [
     imgUrl:
         "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9242/524/250/9242524250_2_2_8.jpg?t=1562053683150&imwidth=900",
   ),
-];
+]);
