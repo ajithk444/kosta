@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kosta/models/product.dart';
@@ -5,7 +6,7 @@ import 'package:kosta/models/product.dart';
 part 'cart.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Cart {
+class Cart extends Equatable{
   final List<Product> products;
 
   const Cart({@required this.products});

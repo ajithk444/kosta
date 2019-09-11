@@ -81,6 +81,7 @@ class ShoppingcartBloc
       cart = Cart(products: updatedProductList);
 
       yield CartUpdatedState(cart);
+      
       if (updatedProductList.length == 0) {
         yield CartIsEmptyState();
       }
