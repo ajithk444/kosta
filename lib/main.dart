@@ -5,6 +5,7 @@ import 'package:kosta/models/product.dart';
 import 'package:kosta/services/blocs/bloc_delegate.dart';
 
 import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/services/blocs/product_bloc/product_bloc_barrel.dart';
 import 'package:kosta/services/repository/cartRepository.dart';
 
 import 'package:kosta/views/app_Layout.dart';
@@ -15,14 +16,11 @@ import 'package:bloc/bloc.dart';
 import 'models/cart.dart';
 
 void main() async {
-  BlocSupervisor.delegate = await HydratedBlocDelegate.build();
+  BlocSupervisor.delegate = SimpleBlocDelegate(
+    await HydratedBlocStorage.getInstance(),
+  );
   runApp(MyApp());
 }
-
-/* void main() {
-  BlocSupervisor.delegate = SimpleBlocDelegate();
-  runApp(MyApp());
-} */
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -31,41 +29,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ShoppingcartBloc _cartBloc;
   final CartRepository _cartRepository = CartRepository();
+
+  ShoppingcartBloc _cartBloc;
+  ProductBloc _productBloc;
+  List<Product> _cartProductFromStorage;
   @override
   void initState() {
-    _cartBloc = ShoppingcartBloc(cartRepository: _cartRepository);
+    print("this is cartRepo before ${_cartRepository.productList}");
+    _productBloc = ProductBloc(cartRepository: _cartRepository);
+    _cartBloc = ShoppingcartBloc(
+      cartRepository: _cartRepository,
+      productBloc: _productBloc,
+    );
+
+    _cartProductFromStorage = _cartBloc.currentState.props.isEmpty ? [] : _cartBloc.currentState.props;
+    _cartRepository.productList = _cartProductFromStorage;
+    print("current state is ${_cartBloc.currentState.toString()}");
+    print("this is props[0] ${_cartBloc.currentState.props}");
+    print("this is cartRepo after ${_cartRepository.productList}");
+
     super.initState();
   }
 
   @override
   void dispose() {
     _cartBloc.dispose();
+    _productBloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Product> products = [
-      Product(
-        id: 2,
-        name: "Black utility vest with pockets",
-        description:
-            "Black utility vest with patch pockets and zipper fastening. Made of 100% cotton.",
-        brand: "Dudleys",
-        price: 15200,
-        selectedColor: "FFFFF",
-        imgUrl:
-            "https://static.pullandbear.net/2/photos//2019/I/0/2/p/9771/500/800/9771500800_2_2_8.jpg?t=1564403302296&imwidth=900",
-      )
-    ];
-    Cart cart = Cart(products: products);
-    print(cart.toJson());
     return MultiBlocProvider(
       providers: [
         BlocProvider<ShoppingcartBloc>(
           builder: (context) => _cartBloc,
+        ),
+        BlocProvider<ProductBloc>(
+          builder: (context) => _productBloc,
         ),
       ],
       child: MaterialApp(

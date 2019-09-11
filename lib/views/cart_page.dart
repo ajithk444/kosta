@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kosta/ikonate_icons.dart';
 import 'package:kosta/models/product.dart';
 
 import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
@@ -13,6 +14,14 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   bool _edit = false;
+
+  @override
+  void initState() {
+    final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
+   // _cartBloc.dispatch(LoadProductsInCart());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
@@ -25,7 +34,7 @@ class _CartPageState extends State<CartPage> {
         actions: <Widget>[
           IconButton(
             color: Colors.grey,
-            icon: Icon(Icons.edit),
+            icon: Icon(Ikonate.edit),
             onPressed: () {
               setState(() {
                 _edit = _edit ? false : true;
@@ -35,7 +44,10 @@ class _CartPageState extends State<CartPage> {
         ],
         leading: IconButton(
           color: Colors.black,
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Ikonate.chevron_left,
+            color: Colors.black,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -44,7 +56,7 @@ class _CartPageState extends State<CartPage> {
       ),
       backgroundColor: Colors.white,
       body: cartBody(_cartBloc),
-       bottomNavigationBar: bottomBar(_cartBloc),
+      bottomNavigationBar: bottomBar(_cartBloc),
     );
   }
 
@@ -54,23 +66,28 @@ class _CartPageState extends State<CartPage> {
         child: BlocBuilder(
           bloc: _cartBloc,
           builder: (context, state) {
-            if (state is CartItemsLoadedState) {
-              final List<Product> productItemsList = state.cart.products;
-              return ListView.builder(
-                itemCount: productItemsList.length,
-                itemBuilder: (context, index) {
-                  Product productItem = productItemsList[index];
-                  return CartItemWidget(
-                    product: productItem,
-                    edit: _edit,
-                  );
-                },
+            if (state is CartLoadingState) {
+              return Center(
+                child: CircularProgressIndicator(),
               );
             }
-            if (state is CartEmptyState) {
-              return Center(
-                child: Text("Cart Empty"),
-              );
+            if (state is CartLoadedFromStorageState) {
+              return productListWidget(state);
+            }
+            if (state is CartUpdatedState) {
+              return productListWidget(state);
+            }
+            if (state is CartLoadedState) {
+              return productListWidget(state);
+            }
+            if (state is CartIsEmptyState) {
+              return Container(
+                  child: Center(
+                child: Text(
+                  "Votre Panier est vide",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ));
             } else {
               return Container(
                 color: Colors.black,
@@ -78,6 +95,20 @@ class _CartPageState extends State<CartPage> {
             }
           },
         ));
+  }
+
+  ListView productListWidget(state) {
+    final List<Product> productItemsList = state.cart.products;
+    return ListView.builder(
+      itemCount: productItemsList.length,
+      itemBuilder: (context, index) {
+        Product productItem = productItemsList[index];
+        return CartItemWidget(
+          product: productItem,
+          edit: _edit,
+        );
+      },
+    );
   }
 
   Widget emptyCartWidget() {
@@ -90,31 +121,50 @@ class _CartPageState extends State<CartPage> {
   }
 
   bottomBar(ShoppingcartBloc _cartBloc) {
-    return BlocBuilder(
-      bloc: _cartBloc,
-      builder: (context, state) {
-        if (state is CartItemsLoadedState) {
-          List<Product> products = state.cart.products;
-          return Container(
-            height: 100.0,
-            decoration: BoxDecoration(
-                border:
-                    Border(top: BorderSide(color: Colors.black, width: 0.2))),
-            // color: Colors.red[50],
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                cartTotalAmount(products),
-                cartBottomBtn(),
-              ],
-            ),
-          );
-        } else if (state is CartEmptyState) {
-          return Container();
-        } else {
-          return Container( color: Colors.blue,);
-        }
-      },
+    return Container(
+      height: 100.0,
+      child: BlocBuilder(
+        bloc: _cartBloc,
+        builder: (context, state) {
+          if (state is CartLoadingState) {
+            return Container(
+                // color: Colors.red,
+                );
+          } else if (state is CartLoadedFromStorageState) {
+            return bottomBarContent(state);
+          } else if (state is CartUpdatedState) {
+            return bottomBarContent(state);
+          }
+          if (state is CartLoadedState) {
+            return bottomBarContent(state);
+          } else if (state is CartIsEmptyState) {
+            return Container(
+                // color: Colors.red,
+                );
+          } else {
+            return Container(
+              color: Colors.blue,
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Container bottomBarContent(state) {
+    List<Product> products = state.cart.products;
+    return Container(
+      height: 100.0,
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.black, width: 0.2))),
+      // color: Colors.red[50],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          cartTotalAmount(products),
+          cartBottomBtn(),
+        ],
+      ),
     );
   }
 

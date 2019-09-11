@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kosta/models/cart.dart';
-import 'package:kosta/models/product.dart';
- 
-import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
+
+import 'package:kosta/services/blocs/product_bloc/product_bloc_barrel.dart';
 import 'package:kosta/views/product_widget.dart';
 
- 
+import '../ikonate_icons.dart';
 
-class CategoryPage extends StatelessWidget {
+class CategoryPage extends StatefulWidget {
   const CategoryPage({Key key}) : super(key: key);
 
   @override
+  _CategoryPageState createState() => _CategoryPageState();
+}
+
+int _gridCrossAxisCount = 2;
+double _gridChildAspectRatio = 0.59;
+
+class _CategoryPageState extends State<CategoryPage> {
+  @override
+  void initState() {
+    final _productBloc = BlocProvider.of<ProductBloc>(context);
+    _productBloc.dispatch(LoadProducts());
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-/*     final cartBloc = BlocProvider.of<ShoppingcartBloc>(context); */
+    final _productBloc = BlocProvider.of<ProductBloc>(context);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -34,17 +49,17 @@ class CategoryPage extends StatelessWidget {
         ),
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: _gridCrossAxisCount,
             crossAxisSpacing: 0,
-            mainAxisSpacing: 10,
-            childAspectRatio: .59,
+            mainAxisSpacing: 25,
+            childAspectRatio: _gridChildAspectRatio, //.59
           ),
           delegate: SliverChildListDelegate(<Widget>[
-            for (var product  in myProducts)
+            for (var product in myProducts)
               Builder(
                 builder: (context) {
                   return ProductWidget(
-                    productItem: product ,
+                    product: product,
                   );
                 },
               ),
@@ -76,13 +91,23 @@ class CategoryPage extends StatelessWidget {
             children: <Widget>[
               IconButton(
                 color: Colors.black,
-                icon: Icon(Icons.list),
-                onPressed: () {},
+                icon: Icon(Ikonate.gruid),
+                onPressed: () {
+                  setState(() {
+                    _gridCrossAxisCount = 2;
+                    _gridChildAspectRatio = 0.59;
+                  });
+                },
               ),
               IconButton(
                 color: Colors.black,
-                icon: Icon(Icons.sort),
-                onPressed: () {},
+                icon: Icon(Ikonate.stop),
+                onPressed: () {
+                  setState(() {
+                    _gridCrossAxisCount = 1;
+                    _gridChildAspectRatio = 0.7;
+                  });
+                },
               ),
             ],
           )

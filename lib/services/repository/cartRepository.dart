@@ -2,14 +2,14 @@ import 'package:kosta/models/cart.dart';
 import 'package:kosta/models/product.dart';
 
 class CartRepository {
-  List<Product> productItemsList = [];
+  List<Product> productList = [];
   Cart productItems = Cart(products: []);
   addToList(Product item) {
     bool isPresent = false;
 
-    if (productItemsList.length > 0) {
-      for (int i = 0; i < productItemsList.length; i++) {
-        if (productItemsList[i].id == item.id) {
+    if (productList.length > 0) {
+      for (int i = 0; i < productList.length; i++) {
+        if (productList[i].id == item.id) {
           increaseItemQuantity(item);
           isPresent = true;
           break;
@@ -19,10 +19,10 @@ class CartRepository {
       }
 
       if (!isPresent) {
-        productItemsList.add(item);
+        productList.add(item);
       }
     } else {
-      productItemsList.add(item);
+      productList.add(item);
     }
 
     return item;
@@ -32,9 +32,9 @@ class CartRepository {
     if (item.quantity > 1) {
       decreaseItemQuantity(item);
     } else {
-      productItemsList.remove(item);
+      productList.remove(item);
     }
-    return productItemsList;
+    return productList;
   }
 
   void increaseItemQuantity(Product item) => item.incrementQuantity();

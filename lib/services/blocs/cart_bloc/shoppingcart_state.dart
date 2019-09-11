@@ -8,31 +8,45 @@ abstract class ShoppingcartState extends Equatable {
   ShoppingcartState([List props = const <dynamic>[]]) : super(props);
 }
 
-class InitialShoppingcartState extends ShoppingcartState {
+class CartLoadingState extends ShoppingcartState {
   @override
-  String toString() => 'Items Loading';
+  String toString() => 'State: Product from cart Loading';
 }
 
-class CartItemsLoadedState extends ShoppingcartState {
+class CartLoadedState extends ShoppingcartState {
   final Cart cart;
 
-  //List<Product> products = cart.products;
-  CartItemsLoadedState(this.cart) : super([cart]);
+  CartLoadedState([this.cart = const Cart(products: [])]) : super([cart]);
   @override
   String toString() => 'CartItemsLoaded Loaded';
 }
 
-class CartEmptyState extends ShoppingcartState {
+class CartLoadedFromStorageState extends ShoppingcartState {
+  final Cart cart;
+  CartLoadedFromStorageState([this.cart = const Cart(products: [])])
+      : super(cart.products);
   @override
-  String toString() => 'Cart Empty';
+  String toString() => 'CartItemsLoaded Loaded';
 }
 
-class ItemAddedState extends ShoppingcartState {
+class CartUpdatedState extends ShoppingcartState {
   final Cart cart;
 
-  ItemAddedState([this.cart = const Cart(products: [])]) : super([cart]);
+  //List<Product> products = cart.products;
+  CartUpdatedState(this.cart) : super([cart]);
   @override
-  String toString() => 'Item Added ';
+  String toString() => 'State: Cart Updated State';
+}
+
+class CartIsEmptyState extends ShoppingcartState {
+  @override
+  String toString() => 'State: Cart Empty';
+}
+
+class ProductDeletedFromCartState extends ShoppingcartState {
+  ProductDeletedFromCartState() : super([]);
+  @override
+  String toString() => 'State: Product Deleted ';
 }
 
 class CartErrorState extends ShoppingcartState {

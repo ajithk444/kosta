@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class SimpleBlocDelegate extends BlocDelegate {
+class SimpleBlocDelegate extends HydratedBlocDelegate  {
+  SimpleBlocDelegate(HydratedStorage storage) : super(storage);
+  
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);

@@ -7,18 +7,16 @@ abstract class ShoppingcartEvent extends Equatable {
   ShoppingcartEvent([List props = const <dynamic>[]]) : super(props);
 }
 
-class LoadProducts extends ShoppingcartEvent {
+class LoadProductsInCart extends ShoppingcartEvent {
   @override
   String toString() => 'Load all product Items';
 }
 
-class AddProductToCart extends ShoppingcartEvent {
-  final Product product;
-
-  AddProductToCart({this.product}) : assert(product != null);
+class UpdateCart extends ShoppingcartEvent {
+  UpdateCart();
 
   @override
-  String toString() => 'Add product Item';
+  String toString() => 'Event : Update Cart';
 }
 
 class RemoveProductFromCart extends ShoppingcartEvent {

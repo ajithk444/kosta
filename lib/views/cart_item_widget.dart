@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kosta/ikonate_icons.dart';
 import 'package:kosta/models/product.dart';
 import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
 import 'package:kosta/utils.dart';
@@ -22,10 +23,10 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   Widget build(BuildContext context) {
     final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
 
-    addToCart(Product product) {
-      _cartBloc.dispatch(AddProductToCart(product: product));
-      /* _cartBloc.dispatch(LoadProducts()); */
-    }
+    /*  addToCart(Product product) {
+      _cartBloc.dispatch(NewProductAddedToCart(product: product));
+       _cartBloc.dispatch(LoadProducts()); 
+    } */
 
     removeFromCart(Product product) {
       _cartBloc.dispatch(RemoveProductFromCart(product: product));
@@ -116,14 +117,13 @@ class _CartItemWidgetState extends State<CartItemWidget> {
           children: <Widget>[
             iconBtn(
               Colors.red,
-              Icons.delete,
+              Ikonate.bin,
               widget.product,
               () {
                 removeFromCart(widget.product);
               },
             ),
-            iconBtn(
-                Colors.grey, Icons.favorite_border, widget.product, null)
+            iconBtn(Colors.black, Ikonate.favourite, widget.product, () {})
           ],
         ),
       ),

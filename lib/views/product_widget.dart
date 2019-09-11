@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kosta/models/product.dart';
 import 'package:kosta/services/blocs/cart_bloc/shoppingcart_bloc_barrel.dart';
+import 'package:kosta/services/blocs/product_bloc/product_bloc_barrel.dart';
 
 import '../utils.dart';
 
 class ProductWidget extends StatelessWidget {
-  final Product productItem;
+  final Product product;
 
-  const ProductWidget({Key key, @required this.productItem}) : super(key: key);
+  const ProductWidget({Key key, @required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context);
+    /* final _cartBloc = BlocProvider.of<ShoppingcartBloc>(context); */
+    final _productBloc = BlocProvider.of<ProductBloc>(context);
 
-    addToCart(Product productItem) {
-      _cartBloc.dispatch(AddProductToCart(product: productItem));
+    addToCart(Product product) {
+      _productBloc.dispatch(AddProductToCart(product: product));
       /* _cartBloc.dispatch(LoadProducts()); */
     }
 
@@ -25,29 +27,33 @@ class ProductWidget extends StatelessWidget {
         elevation: 0,
         child: InkWell(
           onTap: () {
-            addToCart(productItem);
+            addToCart(product);
             Scaffold.of(context).removeCurrentSnackBar();
             final snackBar = SnackBar(
-              content: Text('${productItem.name} ajouté à votre panier!'),
+              content: Text('${product.name} ajouté à votre panier!'),
               duration: Duration(milliseconds: 2000),
             );
             Scaffold.of(context).showSnackBar(snackBar);
           },
           child: Container(
             // padding: EdgeInsets.only(left: 10, right: 20, bottom: 15),
-            //height: 400,
-            // color: Colors.red,
+          // height: 900,//400
+            width: double.infinity,
+           // color: Colors.red,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  height: 270,
-                  width: double.infinity / 2,
-                  color: Colors.red.withOpacity(0.2),
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: Image.network(productItem.imgUrl) ??
-                        Center(child: Text("KOSTA")),
+                Expanded(
+                  child: Container(
+                     //height: 100,//250,
+                    width: double.infinity,
+                    color: Colors.red.withOpacity(0.2),
+                    child: FittedBox(
+                      alignment: Alignment.topCenter,
+                      fit: BoxFit.cover,
+                      child: Image.network(product.imgUrl) ??
+                          Center(child: Text("KOSTA")),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -56,14 +62,14 @@ class ProductWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    productItem.isNew
+                    product.isNew
                         ? Text(
                             "nouveau".toUpperCase(),
                             style: TextStyle(fontSize: 10),
                           )
                         : Text(" "),
                     Text(
-                      productItem.name,
+                      product.name,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
@@ -76,7 +82,7 @@ class ProductWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "${productItem.price.toStringAsFixed(0)} FCFA",
+                          "${product.price.toStringAsFixed(0)} FCFA",
                           style: TextStyle(
                               fontWeight: FontWeight.w400, fontSize: 10),
                         ),
@@ -84,7 +90,7 @@ class ProductWidget extends StatelessWidget {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: HexColor(productItem.selectedColor),
+                            color: HexColor(product.selectedColor),
                             // shape: BoxShape.circle,
                           ),
                         )
@@ -111,7 +117,7 @@ class ProductWidget extends StatelessWidget {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: HexColor(productItem.selectedColor),
+                color: HexColor(product.selectedColor),
                 shape: BoxShape.circle,
               ),
             ),
